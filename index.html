@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <script src="https://cdn.jsdelivr.net/npm/p5@2.3.4/lib/p5.js"></script>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+  <meta name="theme-color" content="#193b49">
+  <title>Salmonella Detection in Water</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div id="brandbar">
+ <div class="brand-icon">
+  <img src="logo.JPG" alt="7YDARA & NOU7 Logo">
+</div>
+  <div class="brand-text">
+    <div class="brand-name">7YDARA <span>&amp;</span> NOU7</div>
+    <div class="brand-subtitle">VETERINARY VIRTUAL LAB</div>
+  </div>
+</div>
+  <main>
+    
+    <!-- Compact Page Navigation -->
+    <nav id="pageNav" aria-label="Page navigation" hidden>
+      <button type="button" id="prevPage" onclick="changeLabPage(-1)">
+        ‹ PREVIOUS
+      </button>
+      <span id="pageNavLabel">PAGE 1</span>
+      <button type="button" id="nextPage" onclick="changeLabPage(1)">
+        NEXT ›
+      </button>
+    </nav>
+
+    <!-- Welcome Screen -->
+    <section class="scr" id="s_in">
+      <small>VETERINARY VIRTUAL LAB</small>
+      <div class="big">SALMONELLA</div>
+      <div class="big bt">DETECTIVE</div>
+
+      <p>
+        الكشف عن السالمونيلا في المياه بطريقة الترشيح الغشائي
+      </p>
+
+      <button class="p" onclick="go2('s_th')">
+        ENTER OUR SECRET LAB
+      </button>
+
+      <div class="cr" id="crd"></div>
+      <small>EDUCATIONAL SIMULATION • NO REAL SAMPLE TESTING</small>
+    </section>
+
+    <!-- Educational Background -->
+    <section class="scr" id="s_th" hidden>
+      <h2>VETERINARY BACKGROUND</h2>
+
+      <p>
+        <b>ليه بنفحص المياه؟</b>
+        السالمونيلا بكتيريا بتسبب أمراض للإنسان والحيوان،
+        والمياه الملوثة ممكن تنقلها.
+      </p>
+
+      <p>
+        <b>الهدف:</b>
+        تنفيذ مراحل الكشف من الترشيح والتخصيب
+        لحد الزراعة على XLD وقراءة النتيجة.
+      </p>
+
+      <p>
+        <b>تنبيه:</b>
+        النتائج هنا تعليمية، والكشف الحقيقي محتاج طريقة
+        معتمدة واختبارات تأكيدية.
+      </p>
+
+      <button class="p" onclick="go2('s_sc')">
+        CHOOSE YOUR SCENARIO
+      </button>
+    </section>
+
+    <!-- Scenario Selection -->
+    <section class="scr" id="s_sc" hidden>
+      <h2>CHOOSE YOUR LAB SCENARIO</h2>
+      <p>
+        اختار نوع العينة، وبعدين اشتغل بنفسك
+        أو شغّل التجربة تلقائيًا.
+      </p>
+
+      <div class="cds">
+        <div class="cd" onclick="pick('pos')">
+          <b>POSITIVE</b>
+          <span>العينة ملوثة بالسالمونيلا</span>
+        </div>
+
+        <div class="cd n" onclick="pick('neg')">
+          <b>NEGATIVE</b>
+          <span>العينة سالبة للسالمونيلا</span>
+        </div>
+
+        <div class="cd r" onclick="pick('rnd')">
+          <b>RANDOM</b>
+          <span>اختيار عشوائي 50/50</span>
+        </div>
+      </div>
+
+      <label>
+        <input type="checkbox" onchange="AUTO=this.checked">
+        🎬 شغّل التجربة تلقائيًا
+      </label>
+
+      <small>Training simulation only</small>
+    </section>
+
+    <!-- Top Header -->
+    <header id="top">
+      <b>SALMONELLA DETECTIVE</b>
+      <i>VIRTUAL WATER SAMPLE WORKFLOW</i>
+
+      <div id="pg">
+        <div id="pgb"></div>
+        <span id="pgt"></span>
+      </div>
+    </header>
+
+    <h1>🧫 معمل الكشف عن السالمونيلا في المياه</h1>
+
+    <p class="s">
+      اسحب الأدوات من الرف الجانبي إلى الطاولة.
+      اسحب أداة فوق أداة أخرى لتنفيذ الخطوات المعملية.
+    </p>
+
+    <!-- Instructions -->
+    <section class="c">
+      <div id="steps"></div>
+      <div class="msg" id="msg"></div>
+
+      <label>
+        العينة:
+        <select id="mode" onchange="if(!DR)init()">
+          <option value="pos">موجبة (POSITIVE)</option>
+          <option value="neg">سالبة (NEGATIVE)</option>
+          <option value="rnd">عشوائية 50/50</option>
+        </select>
+      </label>
+
+      <button class="p" onclick="demo()">
+        🎬 شاهد التجربة
+      </button>
+
+      <button onclick="hint()">💡 تلميح</button>
+      <button onclick="init()">🔄 تجربة جديدة</button>
+    </section>
+
+    <!-- Automatic Demonstration Caption -->
+    <div id="cap" hidden>
+      <span id="capt"></span>
+      <button onclick="DS=1">⏹ إيقاف</button>
+    </div>
+
+    <!-- Laboratory -->
+    <section class="lab">
+      <aside class="shelf" id="sh">
+        <h3>🗄️ رف الأدوات</h3>
+      </aside>
+
+      <div class="table" id="tb">
+        <div id="sm"></div>
+
+        <div
+          id="cur"
+          style="position:absolute;display:none;z-index:2000;font-size:28px;pointer-events:none"
+        >👆</div>
+
+        <!-- Pouring Controls -->
+        <div class="pp" id="pp" hidden>
+          <div id="ppt"></div>
+          <button id="hb">💧 اضغط مطولًا للصب</button>
+          <button onclick="xfer(1)">+1 مل</button>
+          <button class="p" onclick="donePour()">✔ خلصت</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final Report -->
+    <section id="rep"></section>
+  </main>
+
+<!-- Completion Celebration -->
+<section id="completionCelebration" hidden aria-live="polite">
+  <div class="complete-card">
+    <div class="complete-check">✓</div>
+    <p class="complete-eyebrow">VETERINARY VIRTUAL LAB</p>
+    <h2>MISSION COMPLETE!</h2>
+    <div class="complete-logo">7YDARA <span>&amp;</span> NOU7</div>
+    <p class="complete-message">
+      Congratulations! You have completed the
+      Salmonella Detection in Water virtual laboratory.
+    </p>
+    <p class="complete-footer">MADE BY FUTURE DOCTORS ♥</p>
+    <button class="p" onclick="go2('s_sc')">TRY AGAIN</button>
+  </div>
+</section>
+
+  <script src="sketch.js"></script>
+</body>
+</html>
